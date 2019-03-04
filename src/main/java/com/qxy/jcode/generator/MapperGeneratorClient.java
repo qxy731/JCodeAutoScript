@@ -79,10 +79,13 @@ public class MapperGeneratorClient  implements GeneratorClient{
 	
 	public static void main(String[] args) {
 		try{ 
-			HashMap<String,Object> map = DataUtil.TABLE;
 			MapperGeneratorClient mapper = new MapperGeneratorClient();
-			for(String nameNoSuffix : map.keySet()) {
+			HashMap<String,String> map = DataUtil.parseGenerateXml();
+			for(String nameNoSuffix : map.keySet()){
+				//装载实体属性及表字段到DataUtil.TABLE
+				//DataUtil.convertTableToProperty(map.get(nameNoSuffix), nameNoSuffix);
 				mapper.generator(nameNoSuffix);
+				DataUtil.TABLE.clear();
 			}
 		}catch (Exception e) {
 			e.printStackTrace();

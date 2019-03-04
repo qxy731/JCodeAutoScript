@@ -64,6 +64,9 @@ public class CommonUtil {
 			if(PropertyType.Date.toString().equals(property.getPropertyType().toString())||PropertyType.Timestamp.toString().equals(property.getPropertyType().toString())){
 				StringBuffer sb = new StringBuffer("import ");//$NON-NLS-1$
 				sb.append("java.util.Date").append(";");
+				sb.append("\r\n");
+				sb.append("import ");
+				sb.append("com.fasterxml.jackson.annotation.JsonFormat").append(";");
 				importStrings.add(sb.toString());
 			}
 		}
@@ -132,9 +135,18 @@ public class CommonUtil {
 		return new String(ch);
 	}
 	
+	public static String lowerFirst(String str){
+		str = str.replaceAll("_", "");
+		char[] ch = str.toCharArray();
+		if (ch[0] >= 'A' && ch[0] <= 'Z') {
+			ch[0] += 32;
+		}
+		return new String(ch);
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println(CommonUtil.lowerFirstCase("RptBranchDeposAnalService"));
+		System.out.println(CommonUtil.lowerFirst("Rpt_Branch_DeposAnalService"));
 	}
 
 }

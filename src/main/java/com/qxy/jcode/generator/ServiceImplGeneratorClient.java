@@ -85,9 +85,11 @@ public class ServiceImplGeneratorClient  implements GeneratorClient{
 	
 	public static void main(String[] args) {
 		try{ 
-			HashMap<String,Object> map = DataUtil.TABLE;
 			ServiceImplGeneratorClient service = new ServiceImplGeneratorClient();
-			for(String nameNoSuffix : map.keySet()) {
+			HashMap<String,String> map = DataUtil.parseGenerateXml();
+			for(String nameNoSuffix : map.keySet()){
+				//装载实体属性及表字段到DataUtil.TABLE
+				//DataUtil.convertTableToProperty(map.get(nameNoSuffix), nameNoSuffix);
 				service.generator(nameNoSuffix);
 			}
 		}catch (Exception e) {

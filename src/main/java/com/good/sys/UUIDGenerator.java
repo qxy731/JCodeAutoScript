@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+/*import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.support.atomic.RedisAtomicLong;
+import org.springframework.data.redis.support.atomic.RedisAtomicLong;*/
 
 public class UUIDGenerator {
 	
-	private static final String REDIS_KEY_COMMONSEQ = "SPRING_SYSTEM_COMMONSEQ";
+	/*private static final String REDIS_KEY_COMMONSEQ = "SPRING_SYSTEM_COMMONSEQ";
 	//private static final String REDIS_KEY_WORKID = "SPRING_SYSTEM_WORKID";
 	private static final String REDIS_KEY_TIMESEQ = "SPRING_SYSTEM_TIMESEQ";
 	
@@ -22,11 +22,11 @@ public class UUIDGenerator {
 	//private static long workId = 100000L;
 	//private static RedisAtomicLong workCounter = null;
 	private static RedisAtomicLong sequenceCounter = null;
-	private static RedisAtomicLong timeCounter = null;
+	private static RedisAtomicLong timeCounter = null;*/
 	
 	/*@Autowired
     private static RedisTemplate<String, ?> redisTemplate = null;*/
-	static{
+	/*static{
 		try{
 			@SuppressWarnings("unchecked")
 			RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>) SpringContextUtil.getBeanById("redisTemplate");
@@ -36,14 +36,14 @@ public class UUIDGenerator {
 			RedisConnectionFactory connectionFactory = redisTemplate.getConnectionFactory();
 			sequenceCounter = new RedisAtomicLong(REDIS_KEY_COMMONSEQ, connectionFactory);
 			timeCounter = new RedisAtomicLong(REDIS_KEY_TIMESEQ, connectionFactory);
-			/*workCounter = new RedisAtomicLong(REDIS_KEY_WORKID, connectionFactory);
+			workCounter = new RedisAtomicLong(REDIS_KEY_WORKID, connectionFactory);
 			if(StringUtils.isEmpty(workId)){
 				workId = workCounter.incrementAndGet();
-			}*/
+			}
 		}catch(Exception e){
 			//securerandom = new SecureRandom();
 		}
-	}
+	}*/
 	/**
 	 * 获得一个全球唯一的32位UUID序列号
 	 * @return
@@ -57,25 +57,25 @@ public class UUIDGenerator {
 	 * 17位时间戳+7位redis序列值.
 	 * @return 24位纯数字UUID
 	 */
-	public static String getTimeSequenceKey(){
+/*	public static String getTimeSequenceKey(){
 		String time = formater.format(new Date());
 		String timeSeq = String.format("%07d",timeCounter.incrementAndGet()%10000000);
 		return time + timeSeq;
-	}
+	}*/
 	 
 	 /**
 	 * @return Long Key
 	 */
-	public static Long getRedisLongKey(){
+	/*public static Long getRedisLongKey(){
 		return sequenceCounter.incrementAndGet();
 	}
 	
-	/**
+	*//**
 	 * @return Long Key
-	 */
+	 *//*
 	public static String getCommonSequenceKey(){
 		return String.format("%020d",sequenceCounter.incrementAndGet()&0x7FFFFFFF).substring(4);
-	}
+	}*/
 	
 	/*public static String getRandomKey(){
 		String workid = String.format("%05d", workId%100000);
@@ -89,7 +89,7 @@ public class UUIDGenerator {
 	}*/
 	
 	
-	public static String getBizSequenceKey(String prefix,String suffix){
+	/*public static String getBizSequenceKey(String prefix,String suffix){
 		String retStr = String.valueOf(getRedisLongKey());
 		prefix = prefix==null?"":prefix;
 		suffix = suffix==null?"":suffix;
@@ -102,11 +102,11 @@ public class UUIDGenerator {
 	
 	public static String getBizSequenceKeyBySuffix(String suffix){
         return getBizSequenceKey(null,suffix);
-	}
+	}*/
 	
 	
 	public static void main(String[] args) {
-		Map<String,Object> map = new HashMap<String,Object>();
+		/*Map<String,Object> map = new HashMap<String,Object>();
 		int lenght = 400000;
 		long start = Long.valueOf(formater.format(new Date()));
 		System.out.println("开始时间为"+start+"====================");
@@ -127,7 +127,7 @@ public class UUIDGenerator {
 			System.out.println("出现了重复条数为"+dup);
 		}else{
 			System.out.println("此计算过程没有出现重复");
-		}
+		}*/
 		
 		
 	}

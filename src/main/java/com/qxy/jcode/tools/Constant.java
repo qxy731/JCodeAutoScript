@@ -1,5 +1,5 @@
 /**   
-* @Title ：Constant.java 
+'* @Title ：Constant.java 
 * @Package ：com.qxy.jcode.utils 
 * @Description ： TODO
 * @author ：PeterQi
@@ -29,7 +29,7 @@ public class Constant {
 	
 	public static final String OUT_DIR_VIEW_BASE = "/WEB-INF/view";
 	
-	public static final String OUT_DIR_XML_BASE = "/META-INF/mybatis/mapper";
+	public static final String OUT_DIR_XML_BASE = "mybatis";
 	
 	public static final String OUT_DIR_JAVA_BASE = "com.good.rpt";
 	
@@ -42,6 +42,8 @@ public class Constant {
 	public static final String OUT_DIR_JAVA_SERVICE_IMPL = "service.impl";
 	
 	public static final String OUT_DIR_JAVA_CONTROLLER = "controller";
+	
+	public static final String  OUT_DIR_XML_SQLMAP = "/mapper";
 	
 	public static final String OUT_DIR_JAVA_ROOT = OUT_DIR+OUT_DIR_JAVA;
 	
@@ -67,8 +69,9 @@ public class Constant {
 	
 	public static final String OUT_FILE_SUFFIX_XML = "-sqlmap";
 	
+	public static final String DATE_PATTERN_JSON_FORMAT = "yyyy-MM-dd";
+	
 	public static final String REQUEST_MODEL_BASE = "rpt";
 	
 	public static final String OUT_DIR_VIEW_REPORT = "report";
-
 }

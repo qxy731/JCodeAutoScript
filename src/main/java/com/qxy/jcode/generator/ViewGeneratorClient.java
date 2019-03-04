@@ -66,10 +66,12 @@ public class ViewGeneratorClient implements GeneratorClient{
 	
 	public static void main(String[] args) {
 		try {
-			HashMap<String,Object> map = DataUtil.TABLE;
-			ViewGeneratorClient entity = new ViewGeneratorClient();
-			for(String nameNoSuffix : map.keySet()) {
-				entity.generator(nameNoSuffix);
+			ViewGeneratorClient view = new ViewGeneratorClient();
+			HashMap<String,String> map = DataUtil.parseGenerateXml();
+			for(String nameNoSuffix : map.keySet()){
+				//装载实体属性及表字段到DataUtil.TABLE
+				//DataUtil.convertTableToProperty(map.get(nameNoSuffix), nameNoSuffix);
+				view.generator(nameNoSuffix);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

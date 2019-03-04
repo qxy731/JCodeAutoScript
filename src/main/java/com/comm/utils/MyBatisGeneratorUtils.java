@@ -18,10 +18,10 @@ public class MyBatisGeneratorUtils {
             System.out.println("start generator ...");    
             List<String> warnings = new ArrayList<String>();    
             boolean overwrite = true;
-            File configFile = new File(MyBatisGeneratorUtils.class.getClassLoader().getResource("META-INF/mybatis/generator.xml").getFile());    
+            File configFile = new File(MyBatisGeneratorUtils.class.getClassLoader().getResource("generate.xml").getFile());    
             ConfigurationParser cp = new ConfigurationParser(warnings); 
             Configuration config = cp.parseConfiguration(configFile);    
-            DefaultShellCallback callback = new DefaultShellCallback(overwrite);    
+            DefaultShellCallback callback = new DefaultShellCallback(overwrite);
             MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);    
             myBatisGenerator.generate(null);    
             System.out.println("end generator!");    

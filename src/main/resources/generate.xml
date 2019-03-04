@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gennerates>
+	<!-- tableName 表名 beanNoSufName 无后缀实体名-->
+	<!-- 生成过以后注释掉，不然再次执行会覆盖掉原目录下的同名文件 -->
+	<!-- <generate tableName="test_branch_depos_anal" beanNameNoSuf="TestBrhDepoAnal"/> -->
+	<generate tableName="sys_upload_file" beanNameNoSuf="sysUploadFile"/>
+	<generate tableName="sys_upload_file" beanNameNoSuf="sysUploadFile"/>
+
+</gennerates>

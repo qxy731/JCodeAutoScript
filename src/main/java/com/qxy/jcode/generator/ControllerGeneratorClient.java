@@ -83,10 +83,12 @@ public class ControllerGeneratorClient  implements GeneratorClient{
 	
 	public static void main(String[] args) {
 		try{ 
-			HashMap<String,Object> map = DataUtil.TABLE;
-			ControllerGeneratorClient service = new ControllerGeneratorClient();
-			for(String nameNoSuffix : map.keySet()) {
-				service.generator(nameNoSuffix);
+			ControllerGeneratorClient control = new ControllerGeneratorClient();
+			HashMap<String,String> map = DataUtil.parseGenerateXml();
+			for(String nameNoSuffix : map.keySet()){
+				//装载实体属性及表字段到DataUtil.TABLE
+				//DataUtil.convertTableToProperty(map.get(nameNoSuffix), nameNoSuffix);
+				control.generator(nameNoSuffix);
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
