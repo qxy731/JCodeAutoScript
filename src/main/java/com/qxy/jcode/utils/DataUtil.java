@@ -9,6 +9,11 @@
 package com.qxy.jcode.utils;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +31,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.alibaba.druid.util.StringUtils;
 import com.qxy.jcode.tools.ColumnPrototype;
+import com.qxy.jcode.tools.DbConnectionTool;
 import com.qxy.jcode.tools.Property;
 import com.qxy.jcode.tools.PropertyType;
 import com.qxy.jcode.tools.TablePrototype;
@@ -42,7 +48,7 @@ public class DataUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(DataUtil.class);
 	
-	public static HashMap<String,Property> TABLES = new HashMap<String,Property>();
+	public static HashMap<String,List <Property>> TABLES = new HashMap<String,List <Property> >();
 	
 	public static HashMap<String,Object> TABLE = new HashMap<String,Object>();
 	
@@ -55,48 +61,138 @@ public class DataUtil {
 	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
+	
+	/**
+	 * 按照数据库名称查询所有表结构
+	 * @param tableName
+	 * @param connection
+	 * @return
+	 */
+	@SuppressWarnings("finally")
+	public static List<TablePrototype>  setTableComment(String tableName,Connection connection){
+		List<TablePrototype> tableRows = new ArrayList<TablePrototype>();
+    	//String tableComSql = "select TABLE_COMMENT from INFORMATION_SCHEMA.Tables where table_name='"+ tableName+"' ;";
+		String tableComSql = "SELECT TABLE_CATALOG,TABLE_SCHEMA,TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='"+tableName+"'";
+    	PreparedStatement statement = null;
+    	ResultSet rs = null;
+		try {
+			statement = connection.prepareStatement(tableComSql);
+			rs = statement.executeQuery();
+	    	while(rs.next()){
+	    		TablePrototype tablePrototype = new TablePrototype();
+	    		tablePrototype.setTableCatalog(rs.getString("TABLE_CATALOG"));
+	    		tablePrototype.setTableSchema(rs.getString("TABLE_SCHEMA"));
+	    		tablePrototype.setTableName(rs.getString("TABLE_NAME"));
+	    		tablePrototype.setTableComment(rs.getString("TABLE_COMMENT"));
+	    		tableRows.add(tablePrototype);
+	    		//TABLE.put("tableComment", rs.getString("TABLE_COMMENT"));
+	    	}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rs.close();
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return tableRows;
+		}
+    }
+	
+	 private static List<ColumnPrototype> setColumnComment(String tableName,Connection connection){
+	    	HashMap<String,String> comments = new HashMap<String,String>();
+	    	List<ColumnPrototype> columnsRows = new ArrayList<ColumnPrototype>();
+	    	//String commentSql = "show full columns from " + tableName;
+	    	String commentSql =  "SELECT TABLE_CATALOG,TABLE_SCHEMA,TABLE_NAME,COLUMN_NAME,COLUMN_TYPE,COLUMN_KEY,COLUMN_COMMENT,DATA_TYPE,IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='"+tableName+"'" ;
+	    	PreparedStatement statement = null;
+	        ResultSet rs = null;
+			try {
+				statement = connection.prepareStatement(commentSql);
+				rs = statement.executeQuery();
+				while(rs.next()){
+					ColumnPrototype column = new ColumnPrototype();
+					column.setTableCatalog(rs.getString("TABLE_CATALOG"));
+					column.setTableSchema(rs.getString("TABLE_SCHEMA"));
+					column.setTableName(rs.getString("TABLE_NAME"));
+					column.setColumnName(rs.getString("COLUMN_NAME"));
+					column.setColumnType(rs.getString("COLUMN_TYPE"));
+					column.setColumnKey(rs.getString("COLUMN_KEY"));
+					column.setColumnComment(rs.getString("COLUMN_COMMENT"));
+					column.setDataType(rs.getString("DATA_TYPE"));
+					column.setIsNullable(rs.getString("IS_NULLABLE"));
+					columnsRows.add(column);
+		        	//comments.put(rs.getString("Field"), rs.getString("Comment"));
+		        }
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally{
+				try {
+					rs.close();
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+	        return columnsRows;
+	    }
 
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public HashMap<String,Property> convertTableToProperty(String tableName){
+	public HashMap<String,List <Property>> convertTableToProperty(String tableName){
+    	Connection connection = null;
 		try {
 			StringBuffer table = new StringBuffer();
 	    	StringBuffer columns = new StringBuffer();
+	    	connection = DbConnectionTool.geConnection();	
 	    	table.append(tableSQL);
 	    	columns.append(columnsSQL);
 	    	if(!StringUtils.isEmpty(tableName)) {
 	    		table.append(" AND TABLE_NAME='"+ tableName+"'");
 	    		columns.append(" AND TABLE_NAME='"+ tableName+"'");
 	    	}
-	    	List<TablePrototype> tableRows = jdbcTemplate.query(table.toString(),new BeanPropertyRowMapper(TablePrototype.class));
-	    	List<ColumnPrototype> columnsRows = jdbcTemplate.query(columns.toString(),new BeanPropertyRowMapper(ColumnPrototype.class));
+	    	List<TablePrototype> tableRows = setTableComment(tableName,connection);
+	    	List<ColumnPrototype> columnsRows = setColumnComment(tableName,connection);
 	    	for(TablePrototype tb : tableRows){
-	    		Property property = new Property();
-	    		property.setTableCatalog(tb.getTableCatalog());
-	    		property.setTableSchema(tb.getTableSchema());
-	    		property.setTableName(tb.getTableName());
-	    		property.setTableComment(tb.getTableComment());
-	    		TABLES.put(tb.getTableName(), property);
+	    		//Property property = new Property();
+	    		//property.setTableCatalog(tb.getTableCatalog());
+	    		//property.setTableSchema(tb.getTableSchema());
+	    		//property.setTableName(tb.getTableName());
+	    		//property.setTableComment(tb.getTableComment());
+	    		//TABLES.put(tb.getTableName(), property);
+	    		
+	    		List <Property> propertyList = new ArrayList<Property>();
+	    		for(ColumnPrototype col : columnsRows) {
+		    		String tablename = col.getTableName();
+		    		Property property = new Property();//TABLES.get(tablename);
+		    		if(property != null && tablename.equals(tb.getTableName())) {
+		    			property.setColumnName(col.getColumnName());
+		        		property.setColumnType(col.getColumnType());
+		        		property.setDataType(col.getDataType());
+		        		PropertyType propertyType = sqlType2JavaType(col.getDataType());
+		        		property.setJavaType(propertyType.name());
+		        		property.setNullable(col.getIsNullable()=="YES"?true:false);
+		        		property.setPrimary(col.getColumnKey()=="pri"?true:false);
+		        		property.setPropertyDescription(col.getColumnComment());
+		        		property.setPropertyName(CommonUtil.lowerFirst(col.getColumnName()));
+		        		property.setPropertyType(propertyType);
+		        		propertyList.add(property);
+		    		}
+		    		
+		    	}
+	    		TABLES.put(tb.getTableName(), propertyList);
 	    	}
-	    	for(ColumnPrototype col : columnsRows) {
-	    		String tablename = col.getTableName();
-	    		Property property = TABLES.get(tablename);
-	    		if(property != null) {
-	    			property.setColumnName(col.getColumnName());
-	        		property.setColumnType(col.getColumnType());
-	        		property.setDataType(col.getDataType());
-	        		PropertyType propertyType = sqlType2JavaType(col.getDataType());
-	        		property.setJavaType(propertyType.name());
-	        		property.setNullable(col.getIsNullable()=="YES"?true:false);
-	        		property.setPrimary(col.getColumnKey()=="pri"?true:false);
-	        		property.setPropertyDescription(col.getColumnComment());
-	        		property.setPropertyName(CommonUtil.lowerFirst(col.getColumnName()));
-	        		property.setPropertyType(propertyType);
-	    		}
-	    		TABLES.put(tablename,property);
-	    	}
+	    	
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if(null!=connection) {
+				try {
+					connection.close();
+				}catch(Exception e) {
+					
+				}
+			}
 		}
 		return TABLES;
     }

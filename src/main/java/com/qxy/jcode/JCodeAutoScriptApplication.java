@@ -2,11 +2,14 @@ package com.qxy.jcode;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -23,6 +26,7 @@ import com.qxy.jcode.tools.Property;
 import com.qxy.jcode.utils.DataUtil;
 
 @SpringBootApplication
+
 public class JCodeAutoScriptApplication {
 	
 	@Autowired
@@ -49,7 +53,7 @@ public class JCodeAutoScriptApplication {
 	public static void main(String[] args) {
 		//SpringApplication.run(JCodeAutoScriptApplication.class, args);
 		try {
-			DataUtil.TABLES = new HashMap<String,Property>();
+			DataUtil.TABLES = new HashMap<String,List <Property>>();
 			DataUtil.TABLE = new HashMap<String,Object>();
 			EntityGeneratorClient bean = new EntityGeneratorClient();
 			MapperGeneratorClient mapper = new MapperGeneratorClient();
@@ -65,15 +69,16 @@ public class JCodeAutoScriptApplication {
 					dataUtil.convertTableToProperty(map.get(nameNoSuffix));
 				}
 			}
-			HashMap<String,Property> tables = DataUtil.TABLES;
-			Iterator<Map.Entry<String,Property>> entries = tables.entrySet().iterator(); 
+			HashMap<String,List <Property>> tables = DataUtil.TABLES;
+			Iterator<Map.Entry<String,List <Property>>> entries = tables.entrySet().iterator(); 
 			while (entries.hasNext()) {
-				Map.Entry<String,Property> entry = (Map.Entry<String,Property>) entries.next(); 
+				Map.Entry<String,List <Property>> entry = (Map.Entry<String,List <Property>>) entries.next(); 
 				String tableName = (String)entry.getKey();
-				Property property = (Property)entry.getValue(); 
+				List <Property> property = (List <Property>)entry.getValue(); 
 				String nameNoSuffix = tableName;
 				DataUtil.TABLE.put("nameNoSuffix",nameNoSuffix);
 				DataUtil.TABLE.put("tableName",tableName);
+				DataUtil.TABLE.put(tableName,property);
 				//DataUtil.TABLE.put("pkNames",);
 				bean.generator(nameNoSuffix);
 				mapper.generator(nameNoSuffix);

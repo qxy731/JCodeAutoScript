@@ -31,7 +31,7 @@ public class Constant {
 	
 	public static final String OUT_DIR_XML_BASE = "mybatis";
 	
-	public static final String OUT_DIR_JAVA_BASE = "com.good.rpt";
+	public static final String OUT_DIR_JAVA_BASE = "com.myboot.uprofile";
 	
 	public static final String OUT_DIR_JAVA_ENTITY = "bean";
 	
@@ -59,7 +59,7 @@ public class Constant {
 	
 	public static final String OUT_FILE_SUFFIX_ENTITY = "Po";
 	
-	public static final String OUT_FILE_SUFFIX_MAPPER = "Dao";
+	public static final String OUT_FILE_SUFFIX_MAPPER = "Mapper";
 	
 	public static final String OUT_FILE_SUFFIX_SERVICE = "Service";
 	
@@ -71,7 +71,7 @@ public class Constant {
 	
 	public static final String DATE_PATTERN_JSON_FORMAT = "yyyy-MM-dd";
 	
-	public static final String REQUEST_MODEL_BASE = "rpt";
+	public static final String REQUEST_MODEL_BASE = "";
 	
-	public static final String OUT_DIR_VIEW_REPORT = "report";
+	public static final String OUT_DIR_VIEW_REPORT = "";
 }
