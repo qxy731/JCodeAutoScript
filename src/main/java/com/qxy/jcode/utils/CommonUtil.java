@@ -144,9 +144,67 @@ public class CommonUtil {
 		return new String(ch);
 	}
 	
+	//字段改为驼峰格式
+	public static String humpFormatColumn(String str){
+		//str = str.replaceAll("_", "");
+		String[] tempStr= str.split("_");
+		StringBuffer sb = new StringBuffer("");
+		
+		for(int i=0;i<tempStr.length;i++) {
+			char[] ch = tempStr[i].toCharArray();
+			if(i==0) {//第一下滑线前均为小写
+				for(int index=0;index<ch.length;index++) {
+					if (ch[index] >= 'A' && ch[index] <= 'Z') {
+						ch[index] += 32;
+					}
+				}
+				sb.append(ch);
+			}else {//第一个下划线后面的首字母大写，其余小写
+				for(int index=0;index<ch.length;index++) {
+					if(index==0) {//首字母大写
+						if (ch[0] >= 'a' && ch[0] <= 'z') {
+							ch[0] -= 32;
+						}
+					}else {//其余小写
+						if (ch[index] >= 'A' && ch[index] <= 'Z') {
+							ch[index] += 32;
+						}
+					}
+				}
+				sb.append(ch);
+			}
+		}
+		return sb.toString();
+	}
+	
+	public static String humpFormatTable(String str){
+		//str = str.replaceAll("_", "");
+		String[] tempStr= str.split("_");
+		StringBuffer sb = new StringBuffer("");
+		
+		for(int i=0;i<tempStr.length;i++) {
+			char[] ch = tempStr[i].toCharArray();
+			//划线隔开的字段的首字母大写，其余小写
+			for(int index=0;index<ch.length;index++) {
+				if(index==0) {//首字母大写
+					if (ch[0] >= 'a' && ch[0] <= 'z') {
+						ch[0] -= 32;
+					}
+				}else {//其余小写
+					if (ch[index] >= 'A' && ch[index] <= 'Z') {
+						ch[index] += 32;
+					}
+				}
+			}
+			sb.append(ch);
+		}
+		return sb.toString();
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println(CommonUtil.lowerFirst("Rpt_Branch_DeposAnalService"));
+		//System.out.println(CommonUtil.lowerFirst("Rpt_Branch_DeposAnalService"));
+		System.out.println(CommonUtil.humpFormatColumn("biz_org_info"));
 	}
 
 }

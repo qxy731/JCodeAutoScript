@@ -1,5 +1,6 @@
 package com.qxy.jcode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.qxy.jcode.generator.ServiceImplGeneratorClient;
 import com.qxy.jcode.generator.ViewGeneratorClient;
 import com.qxy.jcode.generator.XMLGeneratorClient;
 import com.qxy.jcode.tools.Property;
+import com.qxy.jcode.utils.CommonUtil;
 import com.qxy.jcode.utils.DataUtil;
 
 @SpringBootApplication
@@ -71,15 +73,17 @@ public class JCodeAutoScriptApplication {
 			}
 			HashMap<String,List <Property>> tables = DataUtil.TABLES;
 			Iterator<Map.Entry<String,List <Property>>> entries = tables.entrySet().iterator(); 
+			List<String> list = new ArrayList<String>();
+			list.add("PK_ID");
 			while (entries.hasNext()) {
 				Map.Entry<String,List <Property>> entry = (Map.Entry<String,List <Property>>) entries.next(); 
 				String tableName = (String)entry.getKey();
 				List <Property> property = (List <Property>)entry.getValue(); 
-				String nameNoSuffix = tableName;
+				String nameNoSuffix = CommonUtil.humpFormatTable(tableName);
 				DataUtil.TABLE.put("nameNoSuffix",nameNoSuffix);
 				DataUtil.TABLE.put("tableName",tableName);
-				DataUtil.TABLE.put(tableName,property);
-				//DataUtil.TABLE.put("pkNames",);
+				DataUtil.TABLE.put(nameNoSuffix,property);
+				DataUtil.TABLE.put("pkNames",list);
 				bean.generator(nameNoSuffix);
 				mapper.generator(nameNoSuffix);
 				service.generator(nameNoSuffix);

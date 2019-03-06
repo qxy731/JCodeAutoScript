@@ -36,10 +36,10 @@ import ${Constant.OUT_DIR_JAVA_BASE}.${Constant.OUT_DIR_JAVA_SERVICE}.${ServiceN
 * @ClassName ：${entity.name} 
 * @Description ：业务 控制类
 * @author ：PeterQi
-*
+* @RequestMapping("/${Constant.REQUEST_MODEL_BASE}/${entity.nameNoSuffix?lower_case}")
 */
 @Controller
-@RequestMapping("/${Constant.REQUEST_MODEL_BASE}/${entity.nameNoSuffix?lower_case}")
+@RequestMapping("/${entity.nameNoSuffix?lower_case}")
 public class ${entity.name} {
 
 	private static Logger logger = LoggerFactory.getLogger(${entity.name}.class);

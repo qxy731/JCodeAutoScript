@@ -154,7 +154,7 @@ public class DataUtil {
 	    	List<TablePrototype> tableRows = setTableComment(tableName,connection);
 	    	List<ColumnPrototype> columnsRows = setColumnComment(tableName,connection);
 	    	for(TablePrototype tb : tableRows){
-	    		//Property property = new Property();
+	    		Property keyProperty = new Property();
 	    		//property.setTableCatalog(tb.getTableCatalog());
 	    		//property.setTableSchema(tb.getTableSchema());
 	    		//property.setTableName(tb.getTableName());
@@ -162,6 +162,19 @@ public class DataUtil {
 	    		//TABLES.put(tb.getTableName(), property);
 	    		
 	    		List <Property> propertyList = new ArrayList<Property>();
+	    		
+	    		keyProperty.setColumnName("PK_ID");
+	    		keyProperty.setColumnType("varchar(32)");
+	    		keyProperty.setDataType("varchar");
+        		PropertyType propertyType1 = sqlType2JavaType("varchar");
+        		keyProperty.setJavaType(propertyType1.name());
+        		keyProperty.setNullable(false);
+        		keyProperty.setPrimary(true);
+        		keyProperty.setPropertyDescription("");
+        		keyProperty.setPropertyName(CommonUtil.humpFormatColumn("PK_ID"));
+        		keyProperty.setPropertyType(propertyType1);
+        		propertyList.add(keyProperty);
+        		
 	    		for(ColumnPrototype col : columnsRows) {
 		    		String tablename = col.getTableName();
 		    		Property property = new Property();//TABLES.get(tablename);
@@ -174,7 +187,7 @@ public class DataUtil {
 		        		property.setNullable(col.getIsNullable()=="YES"?true:false);
 		        		property.setPrimary(col.getColumnKey()=="pri"?true:false);
 		        		property.setPropertyDescription(col.getColumnComment());
-		        		property.setPropertyName(CommonUtil.lowerFirst(col.getColumnName()));
+		        		property.setPropertyName(CommonUtil.humpFormatColumn(col.getColumnName()));
 		        		property.setPropertyType(propertyType);
 		        		propertyList.add(property);
 		    		}
